@@ -2,6 +2,7 @@ package com.hrms.hrms_backend.entity;
 import com.hrms.hrms_backend.constants.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -51,7 +53,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private User manager;
-
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
