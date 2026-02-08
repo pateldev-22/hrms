@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 
@@ -24,6 +22,9 @@ public class RefreshToken {
     @Column(nullable = false, unique = true, length = 255)
     private String token;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private LocalDateTime expiryDate;

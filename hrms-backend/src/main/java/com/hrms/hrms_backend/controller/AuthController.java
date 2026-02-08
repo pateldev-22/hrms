@@ -1,38 +1,40 @@
 package com.hrms.hrms_backend.controller;
+import com.hrms.hrms_backend.dto.auth.AuthResponse;
 import com.hrms.hrms_backend.dto.auth.LoginRequest;
-import com.hrms.hrms_backend.security.JwtUtil;
+import com.hrms.hrms_backend.dto.auth.RefreshTokenRequest;
+import com.hrms.hrms_backend.dto.auth.RegisterRequest;
+import com.hrms.hrms_backend.service.AuthService;
 import jakarta.validation.Valid;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authManager;
-    private final JwtUtil jwtUtil;
+    private final AuthService authService;
 
-    public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil) {
-        this.authManager = authManager;
-        this.jwtUtil = jwtUtil;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
+        return ResponseEntity.ok("User registered successfully");
+    }
+
 
     @PostMapping("/login")
-    public String login(@Valid @RequestBody LoginRequest dto) {
-        System.out.println("here !");
-
-        try {
-            Authentication authentication = authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
-            );
-            if(authentication.isAuthenticated()){ System.out.println("hiii");}
-            return jwtUtil.generateToken(dto.getEmail());
-        } catch (AuthenticationException e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
+
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request));
+    }
+
 
 }
