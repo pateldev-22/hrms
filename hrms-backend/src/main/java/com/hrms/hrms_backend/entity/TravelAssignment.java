@@ -31,6 +31,4 @@ public class TravelAssignment {
     @Column(name = "assignment_status")
     private AssignmentStatus assignmentStatus = AssignmentStatus.ASSIGNED;
 
-
-
 }

@@ -1,5 +1,6 @@
 package com.hrms.hrms_backend.entity;
 
+import com.hrms.hrms_backend.constants.AssignmentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -55,5 +56,18 @@ public class TravelPlan {
 
     @OneToMany(mappedBy = "travelPlan", cascade = CascadeType.ALL)
     private List<TravelDocument> travelDocuments = new ArrayList<>();
+
+    public void addAssignment(TravelAssignment assignment){
+        travelAssignments.add(assignment);
+        assignment.setTravelPlan(this);
+    }
+
+    public List<Long> getAssignedEmployeeIds() {
+        return travelAssignments.stream()
+                .filter(assignment -> assignment.getAssignmentStatus() != AssignmentStatus.CANCELLED)
+                .map(assignment -> assignment.getUser().getUserId())
+                .toList();
+    }
+
 
 }
