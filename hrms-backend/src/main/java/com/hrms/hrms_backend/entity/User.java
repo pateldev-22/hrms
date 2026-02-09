@@ -64,5 +64,9 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public Long getManagerId() {
+        return manager != null ? manager.getUserId() : null;
+    }
+
 }
 

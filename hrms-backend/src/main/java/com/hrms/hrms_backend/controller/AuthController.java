@@ -5,8 +5,12 @@ import com.hrms.hrms_backend.dto.auth.RefreshTokenRequest;
 import com.hrms.hrms_backend.dto.auth.RegisterRequest;
 import com.hrms.hrms_backend.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,7 +31,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+        AuthResponse detail = (authService.login(request));
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken",detail.getRefreshToken())
+                .httpOnly(true)
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,cookie.toString())
+                .body(detail);
     }
 
 
