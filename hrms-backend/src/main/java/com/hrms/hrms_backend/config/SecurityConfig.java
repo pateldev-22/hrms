@@ -31,8 +31,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/user").hasAnyRole("EMPLOYEE","HR")
-                        .anyRequest().authenticated())
+                        .requestMatchers("/api/user").authenticated()
+                        .requestMatchers("/api/travels").authenticated()
+                        .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

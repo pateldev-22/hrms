@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TravelAssignmentResponse {
-    private Integer assignmentId;
-    private Integer employeeId;
+    private Long assignmentId;
+    private Long employeeId;
     private String employeeName;
     private String employeeEmail;
     private String department;

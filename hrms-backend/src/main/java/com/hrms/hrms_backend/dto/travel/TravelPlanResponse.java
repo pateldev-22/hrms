@@ -16,12 +16,11 @@ public class TravelPlanResponse {
     private String travelName;
     private String destination;
     private String purpose;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String createdByName;
-    private Integer createdByHrId;
+    private Long createdByHrId;
     private List<TravelAssignmentResponse> assignments;
-    private Integer totalDocuments;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
