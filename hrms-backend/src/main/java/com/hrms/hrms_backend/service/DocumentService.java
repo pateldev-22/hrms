@@ -86,33 +86,4 @@ public class DocumentService {
         return String.format("%s_%s_%s", baseName, timestamp, uniqueId);
     }
 
-
-
-    @Transactional
-    public void deleteDocument(Long documentId) {
-        Document document = documentRepository.findById(documentId)
-                .orElseThrow(() -> new CustomException("Document not found"));
-
-        try {
-            if (document.getCloudinaryPublicId() != null) {
-                Map deleteResult = cloudinary.uploader().destroy(
-                        document.getCloudinaryPublicId(),
-                        ObjectUtils.emptyMap()
-                );
-                log.info("Deleted from Cloudinary: {}", deleteResult.get("result"));
-            }
-
-            documentRepository.delete(document);
-            log.info("Document deleted: {}", document.getFileName());
-
-        } catch (IOException e) {
-            log.error("Failed to delete document: {}", e.getMessage());
-            throw new CustomException("Failed to delete document: " + e.getMessage());
-        }
-    }
-
-    public Document getDocument(Long documentId) {
-        return documentRepository.findById(documentId)
-                .orElseThrow(() -> new CustomException("Document not found"));
-    }
 }
