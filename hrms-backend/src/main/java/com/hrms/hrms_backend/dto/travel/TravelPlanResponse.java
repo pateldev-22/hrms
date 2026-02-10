@@ -16,8 +16,8 @@ public class TravelPlanResponse {
     private String travelName;
     private String destination;
     private String purpose;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String createdByName;
     private Long createdByHrId;
     private List<TravelAssignmentResponse> assignments;

@@ -34,6 +34,9 @@ public class TravelPlan {
     @Column(name = "purpose")
     private String purpose;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
@@ -69,6 +72,5 @@ public class TravelPlan {
                 .map(assignment -> assignment.getUser().getUserId())
                 .toList();
     }
-
 
 }
