@@ -24,6 +24,7 @@ public class TravelDocumentService {
     private final UserRepository userRepository;
     private final TravelDocumentRepository travelDocumentRepository;
     private final DocumentService documentService;
+
     public TravelDocumentService(TravelPlanRepository travelPlanRepository, UserRepository userRepository, TravelDocumentRepository travelDocumentRepository, DocumentService documentService) {
         this.travelPlanRepository = travelPlanRepository;
         this.userRepository = userRepository;

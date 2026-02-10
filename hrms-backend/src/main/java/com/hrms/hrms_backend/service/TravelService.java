@@ -26,13 +26,15 @@ public class TravelService {
     private final UserRepository userRepository;
     private final TravelMapper travelMapper;
     private final TravelAssignmentRepository travelAssignmentRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    public TravelService(TravelPlanRepository travelPlanRepository, TravelAssignmentRepository travelAssignmentRepository, UserRepository userRepository, TravelMapper travelMapper, TravelAssignmentRepository travelAssignmentRepository1, DocumentService documentService, TravelDocumentRepository travelDocumentRepository) {
+    public TravelService(TravelPlanRepository travelPlanRepository, TravelAssignmentRepository travelAssignmentRepository, UserRepository userRepository, TravelMapper travelMapper, TravelAssignmentRepository travelAssignmentRepository1, DocumentService documentService, TravelDocumentRepository travelDocumentRepository, NotificationService notificationService) {
         this.travelPlanRepository = travelPlanRepository;
         this.userRepository = userRepository;
         this.travelMapper = travelMapper;
         this.travelAssignmentRepository = travelAssignmentRepository1;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -65,9 +67,7 @@ public class TravelService {
             assignment.setAssignmentStatus(AssignmentStatus.ASSIGNED);
             savedTravel.addAssignment(assignment);
 
-            //aa future ma implement karvanu che
-//            notificationService.createTravelAssignmentNotification(savedTravel, employee);
-
+            notificationService.createTravelAssignmentNotification(savedTravel, employee);
         }
 
         travelPlanRepository.save(savedTravel);
@@ -119,7 +119,6 @@ public class TravelService {
         if ("HR".equalsIgnoreCase(role)) {
             travels = travelPlanRepository.findActiveTravels(LocalDate.now());
         } else {
-            // Get employee's active travels
             List<TravelPlan> allTravels = travelPlanRepository.findByAssignedEmployee(userId);
             LocalDate today = LocalDate.now();
 
