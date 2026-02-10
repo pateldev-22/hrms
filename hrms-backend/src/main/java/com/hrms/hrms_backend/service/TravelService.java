@@ -1,6 +1,8 @@
 package com.hrms.hrms_backend.service;
 
 import com.hrms.hrms_backend.constants.AssignmentStatus;
+import com.hrms.hrms_backend.constants.OwnerType;
+import com.hrms.hrms_backend.dto.travel.TravelDocumentResponse;
 import com.hrms.hrms_backend.dto.travel.TravelPlanRequest;
 import com.hrms.hrms_backend.dto.travel.TravelPlanResponse;
 
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,13 +29,16 @@ public class TravelService {
     private final UserRepository userRepository;
     private final TravelMapper travelMapper;
     private final TravelAssignmentRepository travelAssignmentRepository;
-
+    private final DocumentService documentService;
+    private final TravelDocumentRepository travelDocumentRepository;
     @Autowired
-    public TravelService(TravelPlanRepository travelPlanRepository, TravelAssignmentRepository travelAssignmentRepository, UserRepository userRepository, TravelMapper travelMapper, TravelAssignmentRepository travelAssignmentRepository1) {
+    public TravelService(TravelPlanRepository travelPlanRepository, TravelAssignmentRepository travelAssignmentRepository, UserRepository userRepository, TravelMapper travelMapper, TravelAssignmentRepository travelAssignmentRepository1, DocumentService documentService, TravelDocumentRepository travelDocumentRepository) {
         this.travelPlanRepository = travelPlanRepository;
         this.userRepository = userRepository;
         this.travelMapper = travelMapper;
         this.travelAssignmentRepository = travelAssignmentRepository1;
+        this.documentService = documentService;
+        this.travelDocumentRepository = travelDocumentRepository;
     }
 
     @Transactional
@@ -198,5 +204,6 @@ public class TravelService {
         assignment.setAssignmentStatus(AssignmentStatus.CANCELLED);
         travelAssignmentRepository.save(assignment);
     }
+
 }
 

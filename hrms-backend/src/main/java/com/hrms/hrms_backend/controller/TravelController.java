@@ -1,5 +1,4 @@
 package com.hrms.hrms_backend.controller;
-
 import com.hrms.hrms_backend.dto.travel.TravelPlanRequest;
 import com.hrms.hrms_backend.dto.travel.TravelPlanResponse;
 import com.hrms.hrms_backend.entity.User;
@@ -9,8 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,7 +112,6 @@ public class TravelController {
 
         return ResponseEntity.ok().build();
     }
-
 
 
     private User getCurrentUser() {
