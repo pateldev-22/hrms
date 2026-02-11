@@ -4,10 +4,23 @@ import {
   LogOut
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useEffect, useState } from 'react';
+import { authService } from '@/services/authService';
 
 const Sidebar = () => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
+
+  const [userData,setUserData] = useState();
+
+  const getUser = async() => {
+    const response = await authService.getCurrentUser(user);
+    setUserData(response.data);
+}
+
+  useEffect(() => {
+    getUser();
+  },[])
 
   const handleLogout = () => {
     console.log("button click thayu");
@@ -51,13 +64,13 @@ const Sidebar = () => {
       <div className="p-4 border-t border-roima500">
         <div className="flex items-center mb-3 px-2">
           <div className="w-8 h-8 rounded-full bg-roima400 flex items-center justify-center text-sm font-semibold">
-            {user?.firstName?.[0]}{user?.lastName?.[0]}
+            {userData?.firstName?.[0]}{userData?.lastName?.[0]}
           </div>
           <div className="ml-3 flex-1 min-w-0">
             <p className="text-sm font-medium truncate">
-              {user?.firstName} {user?.lastName}
+              {userData?.firstName} {userData?.lastName}
             </p>
-            <p className="text-xs text-roima200 truncate">{user?.role}</p>
+            <p className="text-xs text-roima200 truncate">{userData?.role}</p>
           </div>
         </div>
         <button
