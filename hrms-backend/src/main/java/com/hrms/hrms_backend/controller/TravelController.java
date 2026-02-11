@@ -27,6 +27,7 @@ public class TravelController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<TravelPlanResponse> createTravelPlan(@RequestBody TravelPlanRequest travelPlanDto){
 
         var userEmail = SecurityContextHolder.getContext().getAuthentication().getName();

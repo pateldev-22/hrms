@@ -36,7 +36,7 @@ public class DocumentService {
     public Document uploadDocument(MultipartFile file, String category, User uploadedBy) {
 
         try {
-            String publicId = generatePublicId(file.getOriginalFilename());
+            String publicId = cloudinary.randomPublicId();
             String folder = getFolder(category);
 
             Map uploadParams = ObjectUtils.asMap(
@@ -56,12 +56,9 @@ public class DocumentService {
 
             Document savedDocument = documentRepository.save(document);
 
-            log.info("Document uploaded: {} by {}", file.getOriginalFilename(), uploadedBy.getEmail());
-
             return savedDocument;
 
         } catch (IOException e) {
-            log.error("Failed to upload document: {}", e.getMessage());
             throw new CustomException("Failed to upload document: " + e.getMessage());
         }
     }
@@ -72,18 +69,6 @@ public class DocumentService {
         }else{
             return expense_docs_store_loc;
         }
-    }
-
-    private String generatePublicId(String originalFilename) {
-        String baseName = originalFilename;
-        if (originalFilename.contains(".")) {
-            baseName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
-        }
-
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        String uniqueId = UUID.randomUUID().toString().substring(0, 8);
-
-        return String.format("%s_%s_%s", baseName, timestamp, uniqueId);
     }
 
 }

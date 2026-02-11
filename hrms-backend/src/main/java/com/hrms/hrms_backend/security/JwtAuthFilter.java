@@ -35,16 +35,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
 
-        logger.info("Processing request to: {}", request.getRequestURI());
-        logger.info("Authorization header: {}", header);
-
-
         if (header != null && header.startsWith("Bearer ")) {
 
 
             String token = header.substring(7);
-            logger.info("Extracted token: {}", token);
-
 
             try {
                 if (jwtUtil.isTokenValid(token)) {
@@ -54,16 +48,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     List<String> roles = jwtUtil.extractRoles(token);
 
 
-                    logger.info("Email from token: {}", email);
-                    logger.info("Roles from token: {}", roles);
-
-
                     var authorities = roles.stream()
                             .map(SimpleGrantedAuthority::new)
                             .toList();
-
-
-                    logger.info("Created authorities: {}", authorities);
 
 
                     UsernamePasswordAuthenticationToken authentication =
@@ -76,9 +63,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext()
                             .setAuthentication(authentication);
-
-
-                    logger.info("Authentication set successfully");
                 }
             } catch (Exception e) {
                 logger.error("JWT Authentication failed", e);

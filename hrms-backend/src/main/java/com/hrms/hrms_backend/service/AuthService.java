@@ -71,7 +71,7 @@ public class AuthService {
     }
 
 
-    public AuthResponse login(LoginRequest req) {
+    public AuthResponse login(LoginRequest req,String refresh_token) {
 
 
         Authentication authentication =
@@ -92,15 +92,25 @@ public class AuthService {
         );
 
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        if(refresh_token != null && !refresh_token.equals("dev")){
+            refreshTokenService.verifyRefreshToken(refresh_token);
+            return new AuthResponse(
+                    accessToken,
+                    refresh_token,
+                    user.getEmail(),
+                    user.getRole().name()
+            );
+        }else {
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
 
-        return new AuthResponse(
-                accessToken,
-                refreshToken.getToken(),
-                user.getEmail(),
-                user.getRole().name()
-        );
+            return new AuthResponse(
+                    accessToken,
+                    refreshToken.getToken(),
+                    user.getEmail(),
+                    user.getRole().name()
+            );
+        }
     }
 
 
@@ -134,4 +144,6 @@ public class AuthService {
                 user.getRole().name()
         );
     }
+
+
 }
