@@ -32,9 +32,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getById(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new CustomException("No User found with id:" + id));
+    public User getByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("No User found with email:" + email));
     }
 
     public UpdateUser update(Long id,UpdateUser userDto){

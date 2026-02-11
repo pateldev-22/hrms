@@ -28,11 +28,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/user").authenticated()
-                        .requestMatchers("/api/travels").authenticated()
-                        .requestMatchers("/api/travels/document").authenticated()
+                        .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/api/travels/**").permitAll()
+                        .requestMatchers("/api/travels/document/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

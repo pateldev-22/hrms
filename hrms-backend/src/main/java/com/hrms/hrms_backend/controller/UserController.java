@@ -5,12 +5,13 @@ import com.hrms.hrms_backend.entity.User;
 import com.hrms.hrms_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("api/user")
 public class UserController {
 
     @Autowired
@@ -21,9 +22,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
-    @GetMapping({"/id"})
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
-        return ResponseEntity.ok(userService.getById(id));
+    @GetMapping({"/{email}"})
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email){
+        return ResponseEntity.ok(userService.getByEmail(email));
     }
 
     @PutMapping("/{id}")
