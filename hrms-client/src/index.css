@@ -4,7 +4,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+
 @theme inline {
+  --color-roima100: #dcfce7;
+  --color-roima200: #bbf7d0;
+  --color-roima400: #4ade80;
+  --color-roima500: #22c55e;
+  --color-roima600: #16a34a;
+  --color-roima700: #15803d;
+  --font-sans:"Inter",sans-serif,system-ui
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -121,4 +130,18 @@
   body {
     @apply bg-background text-foreground;
   }
+
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 }
