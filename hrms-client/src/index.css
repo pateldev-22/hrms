@@ -4,9 +4,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
-
 @theme inline {
+  --color-roima50 : #f0fdf4;
   --color-roima100: #dcfce7;
   --color-roima200: #bbf7d0;
   --color-roima400: #4ade80;
@@ -141,7 +140,4 @@
   .animate-spin {
     animation: spin 1s linear infinite;
   }
-
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 }

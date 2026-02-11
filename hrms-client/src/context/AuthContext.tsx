@@ -10,7 +10,7 @@ export const AuthProvider = ({ children } : any) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
-
+  
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('token');
@@ -30,19 +30,20 @@ export const AuthProvider = ({ children } : any) => {
   const login = async (email : string, password : string) => {
     try {
       const response = await authService.login(email, password);
+      console.log(response);
       
-      const { token, user } = response.data;
       
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', response.data.accessToken);
+      localStorage.setItem('user', JSON.stringify(response.data.email));
       
-      setToken(token);
-      setUser(user);
+      setToken(response.data.accessToken);
+      setUser(response.data.email);
       
       toast.success('Login successful!');
       return { success: true };
     } catch (error : any) {
       const message = error.response?.data?.message || 'Login failed';
+      console.log(message);
       toast.error(message);
       return { success: false, error: message };
     }
@@ -55,7 +56,8 @@ export const AuthProvider = ({ children } : any) => {
       return { success: true };
     } catch (error : any) {
       const message = error.response?.data?.message || 'Signup failed';
-      toast.error(message);
+      console.log(message);
+      toast.error("Signup failed");
       return { success: false, error: message };
     }
   };
