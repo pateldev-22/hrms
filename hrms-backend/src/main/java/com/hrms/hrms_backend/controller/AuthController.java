@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -20,7 +21,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService, RefreshTokenService refreshTokenService, UserService userService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
@@ -49,6 +50,23 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(Authentication authentication){
+        String email = authentication.getName();
+        authService.logout(email);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken","")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE,cookie.toString())
+                .body("Logged Out Successfully");
     }
 
 

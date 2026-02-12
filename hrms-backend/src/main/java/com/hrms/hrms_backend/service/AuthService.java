@@ -145,5 +145,12 @@ public class AuthService {
         );
     }
 
+    public void logout(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("User not found"));
+
+        refreshTokenService.deleteByUser(user);
+    }
+
 
 }

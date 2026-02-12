@@ -198,5 +198,12 @@ public class TravelService {
         travelAssignmentRepository.save(assignment);
     }
 
+    @Transactional
+    public TravelPlanResponse getTravelById(Long id){
+        return travelPlanRepository.findById(id)
+                .map(travelMapper::toDto)
+                .orElseThrow(() -> new CustomException("Travel not found"));
+    }
+
 }
 

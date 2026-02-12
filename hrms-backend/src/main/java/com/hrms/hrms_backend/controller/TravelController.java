@@ -58,6 +58,13 @@ public class TravelController {
         return ResponseEntity.ok(travels);
     }
 
+    @GetMapping("/{travelId}")
+    public ResponseEntity<TravelPlanResponse> getTravelById(@PathVariable Long travelId){
+        User user = getCurrentUser();
+        TravelPlanResponse travel = travelService.getTravelById(travelId);
+        return ResponseEntity.ok(travel);
+    }
+
 
     @GetMapping("/past")
     public ResponseEntity<List<TravelPlanResponse>> getPastTravels() {
