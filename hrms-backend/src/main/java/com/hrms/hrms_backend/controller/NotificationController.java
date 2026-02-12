@@ -46,8 +46,8 @@ public class NotificationController {
     }
 
     @PutMapping("/mark/{id}")
-    public void markNotificationAsRead(@PathVariable Long id){
-        notificationService.markAsRead(id);
+    public String markNotificationAsRead(@PathVariable Long id){
+        return notificationService.markAsRead(id);
     }
 
     private User getCurrentUser() {

@@ -4,9 +4,12 @@ import com.hrms.hrms_backend.dto.notification.NotificationResponse;
 import com.hrms.hrms_backend.entity.Notification;
 import com.hrms.hrms_backend.entity.TravelPlan;
 import com.hrms.hrms_backend.entity.User;
+import com.hrms.hrms_backend.exception.CustomException;
 import com.hrms.hrms_backend.repository.NotificationRepository;
 import jakarta.transaction.Transactional;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,8 +56,11 @@ public class NotificationService {
     }
 
     @Transactional
-    public void markAsRead(Long notificationId){
-        notificationRepository.markAsRead(notificationId);
+    public String markAsRead(Long notificationId){
+        Notification n = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new CustomException("notification not found yaar"));
+        n.setRead(true);
+        return "Marked As Read";
     }
 
 

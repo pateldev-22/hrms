@@ -17,7 +17,4 @@ public interface NotificationRepository extends JpaRepository<Notification,Long>
 
     List<Notification> getNotificationsByUser(User user);
 
-    @Query(value = "update notifications set is_read=1 where " +
-            "notification_id = :id",nativeQuery = true)
-    void markAsRead(@Param("id") Long id);
 }
