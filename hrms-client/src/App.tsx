@@ -11,7 +11,8 @@ import Signup from './pages/auth/Signup';
 import Dashboard from './pages/dashboard/Dashboard';
 import Travels from './pages/dashboard/Travels';
 import TravelDetails from './pages/dashboard/TravelDetails';
-import Notification from './pages/dashboard/Notification';
+import Notification from './components/Notification';
+import NotificationsPage from './pages/dashboard/NotificationsPage';
 
 
 const router = createBrowserRouter([
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'notifications',
-        element: <Notification />
+        element: <NotificationsPage />
       }
       // {
       //   path: 'expenses',

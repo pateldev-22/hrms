@@ -1,10 +1,22 @@
 import { Bell, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import Notification from '@/components/Notification';
+import { useEffect, useState } from 'react';
+import { notificationService } from '@/services/notificationService';
 
 const Header = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [notificationCount,setNotificationCount] = useState();
+  
+  const getCount = async () => {
+    const response = await notificationService.getUnreadNotificationCount();
+    setNotificationCount(response.data);
+  }
+
+  useEffect(() => {
+    getCount();
+  },[]);
 
   return (
     <header className="h-16 bg-zinc-200 border-b border-gray-300 flex items-center justify-between px-6">
@@ -20,9 +32,23 @@ const Header = () => {
       </div>
 
       <div className="flex items-center space-x-4">
-        <button onClick={()=>navigate('/notifications')} className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-          <Bell className="w-6 h-6" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+          <Popover>
+          <PopoverTrigger asChild>
+            <div>
+              <Bell className="w-6 h-6" />
+              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full"></span>
+              <p className="absolute top-[0.5px] left-6 text-white">{notificationCount}</p>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className='w-80 bg-amber-50 mt-2 mr-6 '>
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <Notification />
+              </div>
+            </div>
+          </PopoverContent>
+          </Popover>
         </button>
 
         <div className="flex items-center space-x-3">

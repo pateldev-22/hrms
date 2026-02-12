@@ -32,6 +32,7 @@ const Sidebar = () => {
     { name: 'Dashboard', href: '/' },
     { name: 'Travels', href: '/travels'},
     { name: 'Expenses', href: '/expenses'},
+    { name: 'All Notifications', href: '/notifications'}
   ];
 
   return (
