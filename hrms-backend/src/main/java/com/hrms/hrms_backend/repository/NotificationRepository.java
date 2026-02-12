@@ -13,9 +13,11 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
     Integer countNotificationByUserAndIsReadIsFalse(User user);
 
+    List<Notification> getNotificationsByUserAndIsReadFalse(User user);
+
     List<Notification> getNotificationsByUser(User user);
 
-    @Query(value = "update notifications n set is_read=TRUE where " +
-            "n.notification_id = :id",nativeQuery = true)
+    @Query(value = "update notifications set is_read=1 where " +
+            "notification_id = :id",nativeQuery = true)
     void markAsRead(@Param("id") Long id);
 }

@@ -28,6 +28,12 @@ public class NotificationController {
         return notificationService.getNotificationByUser(user);
     }
 
+    @GetMapping("/all")
+    public List<NotificationResponse> getAllNotifications(){
+        User user = getCurrentUser();
+        return notificationService.getAllNotifications(user);
+    }
+
     @GetMapping("/unread")
     public Integer getUnreadNotificationByUser(){
         User user = getCurrentUser();
@@ -39,7 +45,7 @@ public class NotificationController {
         return notificationService.deleteNotificationByUser(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/mark/{id}")
     public void markNotificationAsRead(@PathVariable Long id){
         notificationService.markAsRead(id);
     }

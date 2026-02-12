@@ -21,6 +21,13 @@ public class NotificationService {
     }
 
     @Transactional
+    public List<NotificationResponse> getAllNotifications(User user){
+        List<Notification> notifications = notificationRepository.getNotificationsByUser(user);
+        return notifications.stream().map(this::toNotificationResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public void createTravelAssignmentNotification(TravelPlan travel, User user){
         Notification notification = Notification.createTravelAssignmentNotification(user,travel);
         notificationRepository.save(notification);
@@ -33,7 +40,7 @@ public class NotificationService {
 
     @Transactional
     public List<NotificationResponse> getNotificationByUser(User user){
-        List<Notification> notifications = notificationRepository.getNotificationsByUser(user);
+        List<Notification> notifications = notificationRepository.getNotificationsByUserAndIsReadFalse(user);
         return notifications.stream()
                 .map(this::toNotificationResponseDto)
                 .collect(Collectors.toList());
@@ -53,7 +60,7 @@ public class NotificationService {
 
     public NotificationResponse toNotificationResponseDto(Notification notification){
         NotificationResponse dto = new NotificationResponse();
-
+        dto.setNotificationId(notification.getNotificationId());
         dto.setNotificationType(notification.getNotificationType());
         dto.setMessage(notification.getMessage());
         dto.setTitle(notification.getTitle());
