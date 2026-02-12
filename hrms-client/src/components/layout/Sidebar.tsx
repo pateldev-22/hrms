@@ -49,7 +49,7 @@ const Sidebar = () => {
             to={item.href}
             end={item.href === '/'}
             className={({ isActive }) =>
-              `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+              `flex items-center px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
                   ? 'bg-roima500 text-white'
                   : 'text-roima100 hover:bg-roima500/50 hover:text-white'

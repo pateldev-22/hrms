@@ -10,15 +10,17 @@ export const AuthProvider = ({ children } : any) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
-  
+  const [userRole,setUserRole] = useState(null);
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('token');
       const storedUser = localStorage.getItem('user');
+      const storedRole = localStorage.getItem('role');
 
-      if (storedToken && storedUser) {
+      if (storedToken && storedUser && storedRole) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
+        setUserRole(JSON.parse(storedRole));
       }
       
       setLoading(false);
@@ -35,10 +37,12 @@ export const AuthProvider = ({ children } : any) => {
       
       localStorage.setItem('token', response.data.accessToken);
       localStorage.setItem('user', JSON.stringify(response.data.email));
-      
+      localStorage.setItem('role', JSON.stringify(response.data.role));
+
       setToken(response.data.accessToken);
       setUser(response.data.email);
-      
+      setUserRole(response.data.role);
+
       toast.success('Login successful!');
       return { success: true };
     } catch (error : any) {
@@ -62,12 +66,22 @@ export const AuthProvider = ({ children } : any) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setToken(null);
-    setUser(null);
-    toast.success('Logged out successfully');
+  const logout = async () => {
+    try{
+      // const response = await authService.logout();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
+      setToken(null);
+      setUser(null);
+      setUserRole(null);
+      console.log("api success ");
+      // toast.success(response.data);
+    }catch(error : any){
+      console.log(error);
+      toast.error("logout failed");
+    }
+    
   };
 
   const isAuthenticated = () => {
@@ -75,7 +89,9 @@ export const AuthProvider = ({ children } : any) => {
   };
 
   const hasRole = (role : any) => {
-    return user?.role === role;
+    console.log(userRole);
+    console.log(role);
+    return userRole === role;
   };
 
   const value = {
