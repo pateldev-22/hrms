@@ -223,6 +223,7 @@ public class ExpenseService {
         }
 
         if (request.getStatus() == ExpenseStatus.APPROVED || request.getStatus() == ExpenseStatus.REJECTED) {
+            expense.setStatus(request.getStatus());
             expense.setHrRemarks(request.getHrRemark());
             expense.setReviewedBy(hrUser);
         } else {
