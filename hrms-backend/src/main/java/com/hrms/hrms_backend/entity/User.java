@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -63,6 +65,12 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Expense> expenses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewedBy")
+    private List<Expense> reviewedExpenses = new ArrayList<>();
 
     public Long getManagerId() {
         return manager != null ? manager.getUserId() : null;

@@ -61,6 +61,9 @@ public class TravelPlan {
     @OneToMany(mappedBy = "travelPlan", cascade = CascadeType.ALL)
     private List<TravelDocument> travelDocuments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "travelPlan", cascade = CascadeType.ALL)
+    private List<Expense> expenses = new ArrayList<>();
+
     public void addAssignment(TravelAssignment assignment){
         travelAssignments.add(assignment);
         assignment.setTravelPlan(this);
