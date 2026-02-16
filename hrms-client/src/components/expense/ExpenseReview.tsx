@@ -161,9 +161,9 @@ const ExpenseReview = () => {
                           <div className="flex justify-center space-x-2">
                             <Button
                               onClick={() => toggleExpand(expense.expenseId)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1"
+                              className="text-black text-xs px-3 py-1"
+                              variant={'outline'}
                             >
-                              <Eye className="w-4 h-4 mr-1" />
                               View
                             </Button>
                             <Button

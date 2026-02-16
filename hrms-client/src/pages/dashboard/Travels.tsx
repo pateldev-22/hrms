@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const Travels = () => {
-  const { user, hasRole } = useAuth();
+  const { hasRole } = useAuth();
   const navigate = useNavigate();
 
   const [travels, setTravels] = useState<TravelPlan[]>([]);

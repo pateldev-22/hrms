@@ -82,7 +82,7 @@ const UploadProofModal = ({ expenseId, onClose, onSuccess }: UploadProofModalPro
             </label>
 
             {file && (
-              <div className="mt-4 flex items-center justify-center space-x-2 text-green-700 bg-green-50 p-3">
+              <div className="mt-4 flex items-center justify-center space-x-2 text-roima700 bg-green-50 p-3">
                 <FileText className="w-5 h-5" />
                 <span className="text-sm font-medium">{file.name}</span>
               </div>

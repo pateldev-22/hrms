@@ -9,16 +9,7 @@ interface TravelCardProps {
 }
 
 const TravelCard = ({ travel, onClick }: TravelCardProps) => {
-  const getStatusColor = () => {
-    const today = new Date();
-    const startDate = new Date(travel.startDate);
-    const endDate = new Date(travel.endDate);
-
-    if (today < startDate) return 'bg-blue-100 text-blue-800';
-    if (today >= startDate && today <= endDate) return 'bg-green-100 text-green-800';
-    return 'bg-gray-100 text-gray-800';
-  };
-
+  
   const getStatusText = () => {
     const today = new Date();
     const startDate = new Date(travel.startDate);
@@ -37,7 +28,7 @@ const TravelCard = ({ travel, onClick }: TravelCardProps) => {
       <CardHeader className="border-b border-gray-100 pb-3">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">{travel.travelName}</CardTitle>
-          <span className={`px-2 py-1 text-xs font-medium ${getStatusColor()}`}>{getStatusText()}</span>
+          <span className={`px-2 py-1 text-xs font-medium`}>{getStatusText()}</span>
         </div>
       </CardHeader>
 

@@ -26,7 +26,6 @@ export const expenseService = {
     return api.get<ExpenseCategory[]>('/expense-categories');
   },
 
-  // Proof documents
   uploadProof: (expenseId: number, file: File) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -43,7 +42,6 @@ export const expenseService = {
     return api.delete(`/expenses/proofs/${proofId}`);
   },
 
-  // HR endpoints
   getPendingExpenses: () => {
     return api.get<Expense[]>('/expenses/pending');
   },
