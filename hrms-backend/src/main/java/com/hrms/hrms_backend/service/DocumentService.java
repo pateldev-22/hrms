@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@Slf4j
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
@@ -25,6 +24,7 @@ public class DocumentService {
 
     @Value("${cloudinary.folder.travel-documents}") String travel_docs_store_loc;
     @Value("${cloudinary.folder.expense-proofs}") String expense_docs_store_loc;
+    @Value("${cloudinary.folder.refered-cv}") String cv_docs_store_loc;
 
     @Autowired
     public DocumentService(DocumentRepository documentRepository, Cloudinary cloudinary) {
@@ -66,8 +66,10 @@ public class DocumentService {
     private String getFolder(String category) {
         if(category.equals("TRAVEL_DOCUMENT")){
             return travel_docs_store_loc;
-        }else{
+        }else if(category.equals("EXPENSE_PROOF")){
             return expense_docs_store_loc;
+        }else{
+            return cv_docs_store_loc;
         }
     }
 

@@ -67,14 +67,12 @@ public class ExpenseService {
             dailySpent = 0;
         }
 
-        if (category.getMaxAmountPerDay() != null) {
-            Integer totalForDay = dailySpent + request.getAmount();
-            if (totalForDay.compareTo(category.getMaxAmountPerDay()) > 0) {
-                throw new CustomException(
-                        String.format("Daily limit exceeded. Limit: ₹%s, Already spent: ₹%s, Trying to add: ₹%s",
-                                category.getMaxAmountPerDay(), dailySpent, request.getAmount())
-                );
-            }
+        Integer totalForDay = dailySpent + request.getAmount();
+        if (totalForDay.compareTo(category.getMaxAmountPerDay()) > 0) {
+            throw new CustomException(
+                    String.format("Daily limit exceeded. Limit: ₹%s, Already spent: ₹%s, Trying to add: ₹%s",
+                            category.getMaxAmountPerDay(), dailySpent, request.getAmount())
+            );
         }
 
         Expense expense = Expense.builder()
@@ -105,12 +103,8 @@ public class ExpenseService {
         }
 
         LocalDate tripEndDate = expense.getTravelPlan().getEndDate();
-        LocalDate tripStartDate = expense.getTravelPlan().getStartDate();
         LocalDate today = LocalDate.now();
 
-        if (today.isBefore(tripStartDate)) {
-            throw new CustomException("Cannot submit expenses before trip start date");
-        }
 
         if (today.isAfter(tripEndDate.plusDays(10))) {
             throw new CustomException("Expense submission window closed. Must submit within 10 days of trip end.");

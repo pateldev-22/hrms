@@ -5,4 +5,4 @@ public enum AssignmentStatus {
     ACKNOWLEDGED,   // Employee has seen the assignment
     COMPLETED,      // Travel is completed
     CANCELLED       // Assignment cancelled
-}
+}   
