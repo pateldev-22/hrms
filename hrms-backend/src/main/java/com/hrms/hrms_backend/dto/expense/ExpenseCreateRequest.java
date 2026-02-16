@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ExpenseCreateRequest {
     private Long travelId;
-    private Long  expenseCategoryId;
+    private String expenseCategoryName;
     private Integer amount;
     private LocalDate expenseDate;
     private String description;

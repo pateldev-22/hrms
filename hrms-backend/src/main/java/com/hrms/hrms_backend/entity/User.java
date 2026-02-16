@@ -1,4 +1,5 @@
 package com.hrms.hrms_backend.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hrms.hrms_backend.constants.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -66,10 +67,12 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Expense> expenses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reviewedBy")
+    @JsonIgnore
+    @OneToMany(mappedBy = "reviewedBy", fetch = FetchType.LAZY)
     private List<Expense> reviewedExpenses = new ArrayList<>();
 
     public Long getManagerId() {

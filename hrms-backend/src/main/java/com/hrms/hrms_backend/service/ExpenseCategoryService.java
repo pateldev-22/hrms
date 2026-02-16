@@ -5,7 +5,6 @@ import com.hrms.hrms_backend.dto.expense.expenseCategory.ExpenseCategoryResponse
 import com.hrms.hrms_backend.entity.ExpenseCategory;
 import com.hrms.hrms_backend.exception.CustomException;
 import com.hrms.hrms_backend.repository.ExpenseCategoryRepository;
-import jdk.jfr.Category;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,6 +87,7 @@ public class ExpenseCategoryService {
     public ExpenseCategoryResponse toCategoryDTO(ExpenseCategory category){
         ExpenseCategoryResponse dto = new ExpenseCategoryResponse();
 
+        dto.setExpenseCategoryId(category.getCategoryId());
         dto.setCategoryName(category.getCategoryName());
         dto.setDescription(category.getDescription());
         dto.setMaxAmountPerDay(category.getMaxAmountPerDay());

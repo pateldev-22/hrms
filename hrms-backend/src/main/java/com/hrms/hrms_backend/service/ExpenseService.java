@@ -1,5 +1,4 @@
 package com.hrms.hrms_backend.service;
-
 import com.hrms.hrms_backend.constants.ExpenseStatus;
 import com.hrms.hrms_backend.dto.expense.ExpenseCreateRequest;
 import com.hrms.hrms_backend.dto.expense.ExpenseResponse;
@@ -10,16 +9,13 @@ import com.hrms.hrms_backend.entity.ExpenseCategory;
 import com.hrms.hrms_backend.entity.TravelPlan;
 import com.hrms.hrms_backend.entity.User;
 import com.hrms.hrms_backend.exception.CustomException;
-import com.hrms.hrms_backend.repository.ExpenseCategoryRepository;
-import com.hrms.hrms_backend.repository.ExpenseRepository;
-import com.hrms.hrms_backend.repository.TravelPlanRepository;
-import com.hrms.hrms_backend.repository.UserRepository;
+import com.hrms.hrms_backend.repository.*;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -30,18 +26,20 @@ public class ExpenseService {
     private final ExpenseCategoryRepository categoryRepository;
     private final TravelPlanRepository travelPlanRepository;
     private final UserRepository userRepository;
-
+    private final ExpenseProofDocumentRepository expenseProofDocumentRepository;
     @Autowired
     public ExpenseService(
             ExpenseRepository expenseRepository,
             ExpenseCategoryRepository categoryRepository,
             TravelPlanRepository travelPlanRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            ExpenseProofDocumentRepository expenseProofDocumentRepository
             ) {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.travelPlanRepository = travelPlanRepository;
         this.userRepository = userRepository;
+        this.expenseProofDocumentRepository = expenseProofDocumentRepository;
     }
 
     @Transactional
@@ -53,12 +51,9 @@ public class ExpenseService {
         TravelPlan travelPlan = travelPlanRepository.findById(request.getTravelId())
                 .orElseThrow(() -> new CustomException("Travel plan not found"));
 
-        ExpenseCategory category = categoryRepository.findById(request.getExpenseCategoryId())
+        ExpenseCategory category = categoryRepository.findByCategoryName(request.getExpenseCategoryName())
                 .orElseThrow(() -> new CustomException("Expense category not found"));
 
-        if (!category.isActive()) {
-            throw new CustomException("This expense category is inactive");
-        }
 
         if (request.getExpenseDate().isBefore(travelPlan.getStartDate()) ||
                 request.getExpenseDate().isAfter(travelPlan.getEndDate())) {
@@ -73,11 +68,11 @@ public class ExpenseService {
         }
 
         if (category.getMaxAmountPerDay() != null) {
-            Integer totalForDay = (dailySpent += request.getAmount());
+            Integer totalForDay = dailySpent + request.getAmount();
             if (totalForDay.compareTo(category.getMaxAmountPerDay()) > 0) {
                 throw new CustomException(
-                        String.format("Daily limit exceeded. Limit: ₹%s, Already spent: ₹%s",
-                                category.getMaxAmountPerDay(), dailySpent)
+                        String.format("Daily limit exceeded. Limit: ₹%s, Already spent: ₹%s, Trying to add: ₹%s",
+                                category.getMaxAmountPerDay(), dailySpent, request.getAmount())
                 );
             }
         }
@@ -89,14 +84,45 @@ public class ExpenseService {
                 .amount(request.getAmount())
                 .expenseDate(request.getExpenseDate())
                 .description(request.getDescription())
-                .status(ExpenseStatus.PENDING)
+                .status(ExpenseStatus.DRAFT)
                 .build();
 
         Expense savedExpense = expenseRepository.save(expense);
 
-
         return toExpenseDTO(savedExpense);
     }
+
+
+    @Transactional
+    public ExpenseResponse submitExpense(Long expenseId, Long userId) {
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new CustomException("Expense not found"));
+
+        Long proofCount = expenseProofDocumentRepository.countByExpense(expense);
+
+        if (proofCount == 0) {
+            throw new CustomException("At least one proof document is required before submission");
+        }
+
+        LocalDate tripEndDate = expense.getTravelPlan().getEndDate();
+        LocalDate tripStartDate = expense.getTravelPlan().getStartDate();
+        LocalDate today = LocalDate.now();
+
+        if (today.isBefore(tripStartDate)) {
+            throw new CustomException("Cannot submit expenses before trip start date");
+        }
+
+        if (today.isAfter(tripEndDate.plusDays(10))) {
+            throw new CustomException("Expense submission window closed. Must submit within 10 days of trip end.");
+        }
+
+        expense.setStatus(ExpenseStatus.SUBMITTED);
+        Expense submitted = expenseRepository.save(expense);
+
+
+        return toExpenseDTO(submitted);
+    }
+
 
     public ExpenseResponse toExpenseDTO(Expense expense){
         ExpenseResponse dto = new ExpenseResponse();
@@ -114,6 +140,14 @@ public class ExpenseService {
         if(expense.getReviewedBy() != null){
             dto.setReviewedBy(expense.getReviewedBy().getUserId());
         }
+
+
+        dto.setCategoryName(expense.getExpenseCategory().getCategoryName());
+        dto.setEmployeeName(expense.getUser().getFirstName());
+        dto.setEmployeeEmail(expense.getUser().getEmail());
+        dto.setTravelName(expense.getTravelPlan().getTravelName());
+
+
         return dto;
     }
 
@@ -165,7 +199,7 @@ public class ExpenseService {
     }
 
     public List<ExpenseResponse> getPendingExpenses() {
-        List<Expense> expenses = expenseRepository.findByStatusOrderByCreatedAtAsc(ExpenseStatus.PENDING);
+        List<Expense> expenses = expenseRepository.findByStatusOrderByCreatedAtAsc(ExpenseStatus.SUBMITTED);
         return expenses.stream()
                 .map(this::toExpenseDTO)
                 .toList();
@@ -187,7 +221,6 @@ public class ExpenseService {
         expense.setAmount(request.getAmount());
         expense.setExpenseDate(request.getExpenseDate());
         expense.setDescription(request.getDescription());
-        expense.setStatus(ExpenseStatus.PENDING);
 
         Expense updatedExpense = expenseRepository.save(expense);
         return toExpenseDTO(updatedExpense);
@@ -203,7 +236,7 @@ public class ExpenseService {
             throw new CustomException("You can only delete your own expenses");
         }
 
-        if (expense.getStatus() != ExpenseStatus.PENDING) {
+        if (expense.getStatus() != ExpenseStatus.SUBMITTED) {
             throw new CustomException("Only pending expenses can be deleted");
         }
 
@@ -218,7 +251,7 @@ public class ExpenseService {
         User hrUser = userRepository.findById(hrUserId)
                 .orElseThrow(() -> new CustomException("HR user not found"));
 
-        if (expense.getStatus() != ExpenseStatus.PENDING) {
+        if (expense.getStatus() != ExpenseStatus.SUBMITTED) {
             throw new CustomException("Only pending expenses can be reviewed");
         }
 

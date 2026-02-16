@@ -1,9 +1,6 @@
 package com.hrms.hrms_backend.dto.expense;
-
 import com.hrms.hrms_backend.constants.ExpenseStatus;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -19,4 +16,10 @@ public class ExpenseResponse {
     private String description;
     private ExpenseStatus status;
     private String hrRemarks;
+    private Integer proofCount;
+
+    private String categoryName;
+    private String employeeName;
+    private String employeeEmail;
+    private String travelName;
 }

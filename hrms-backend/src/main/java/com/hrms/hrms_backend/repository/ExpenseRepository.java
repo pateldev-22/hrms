@@ -15,18 +15,13 @@ import java.util.List;
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-    List<Expense> findByUser(User employee);
     List<Expense> findByUserOrderByExpenseDateDesc(User employee);
 
-    List<Expense> findByTravelPlan(TravelPlan travelPlan);
     List<Expense> findByTravelPlanOrderByExpenseDateDesc(TravelPlan travelPlan);
 
-    List<Expense> findByStatus(ExpenseStatus status);
     List<Expense> findByStatusOrderByCreatedAtAsc(ExpenseStatus status);
 
     List<Expense> findByTravelPlanAndUser(TravelPlan travelPlan, User employee);
-    List<Expense> findByTravelPlanAndStatus(TravelPlan travelPlan, ExpenseStatus status);
-    List<Expense> findByUserAndStatus(User employee, ExpenseStatus status);
 
     @Query("SELECT SUM(e.amount) FROM Expense e " +
             "WHERE e.user = :employee " +
@@ -43,8 +38,5 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             @Param("travelPlan") TravelPlan travelPlan,
             @Param("status") ExpenseStatus status
     );
-//
-//    @Query("SELECT COUNT(e) FROM Expense e WHERE e.employee = :employee AND e.status = 'PENDING'")
-//    long countPendingByEmployee(@Param("employee") User employee);
 }
 
