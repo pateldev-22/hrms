@@ -17,7 +17,7 @@ const Sidebar = () => {
     const response = await authService.getCurrentUser(user);
     setUserData(response.data);
 }
-
+console.log(userData);
   useEffect(() => {
     getUser();
   },[])

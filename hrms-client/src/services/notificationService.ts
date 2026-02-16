@@ -10,7 +10,7 @@ export const notificationService = {
     },
 
     markAsRead : async (id : number) => {
-        return api.patch(`/notifications/mark/${id}`);
+        return api.put(`/notifications/mark/${id}`);
     },
 
     getAllNotifications : async () => {

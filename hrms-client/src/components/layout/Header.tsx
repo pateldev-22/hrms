@@ -16,7 +16,7 @@ const Header = () => {
 
   useEffect(() => {
     getCount();
-  },[]);
+  },[notificationCount]);
 
   return (
     <header className="h-16 bg-zinc-200 border-b border-gray-300 flex items-center justify-between px-6">
@@ -38,7 +38,7 @@ const Header = () => {
             <div>
               <Bell className="w-6 h-6" />
               <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full"></span>
-              <p className="absolute top-[0.5px] left-6 text-white">{notificationCount}</p>
+              <p className="absolute top-[0.5px] left-6 text-white">{notificationCount == 0 ? <></>: notificationCount}</p>
             </div>
           </PopoverTrigger>
           <PopoverContent className='w-80 bg-amber-50 mt-2 mr-6 '>

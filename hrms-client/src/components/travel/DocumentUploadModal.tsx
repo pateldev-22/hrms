@@ -24,7 +24,9 @@ const DocumentUploadModal = ({ travelId, onClose, onSuccess }: DocumentUploadMod
   const [selectedEmployeesId,setSelectedEmployeesId] = useState();
   const [userId,setUserId] = useState();
   useEffect(() => {
-    fetchEmployees();
+    if(isHR){
+      fetchEmployees();
+    }
   }, []);
 
   const fetchEmployees = async () => {
@@ -103,9 +105,9 @@ const DocumentUploadModal = ({ travelId, onClose, onSuccess }: DocumentUploadMod
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-opacity-30 bg-black/40 flex items-center justify-center z-50 p-4">
       
-      <div className="bg-green-50 w-full max-w-md border-2 border-black">
+      <div className="bg-green-50 w-full max-w-md border border-black">
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">Upload Document</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">

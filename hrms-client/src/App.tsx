@@ -13,6 +13,9 @@ import Travels from './pages/dashboard/Travels';
 import TravelDetails from './pages/dashboard/TravelDetails';
 import Notification from './components/Notification';
 import NotificationsPage from './pages/dashboard/NotificationsPage';
+import Expense from './pages/dashboard/Expense';
+import ExpenseDetails from './pages/dashboard/ExpenseDetails';
+import ExpenseReview from './components/expense/ExpenseReview';
 
 
 const router = createBrowserRouter([
@@ -47,11 +50,20 @@ const router = createBrowserRouter([
       {
         path: 'notifications',
         element: <NotificationsPage />
+      },
+      {
+        path: 'expenses',
+        element: <Expense />,
+      },
+      {
+        path: 'expenses/:travelId',
+        element: <ExpenseDetails />
+      },
+      {
+        path: 'expenses/review/:travelId',
+        element: <ExpenseReview />
       }
-      // {
-      //   path: 'expenses',
-      //   element: <Expenses />,
-      // },
+
       // {
       //   path: 'achievements',
       //   element: <Achievements />,

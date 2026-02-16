@@ -19,7 +19,12 @@ export default function Notification(){
 
     const markAsReadNotification = async (notificationId : number) => {
         try{
-            await notificationService.markAsRead(notificationId);
+            const response = await notificationService.markAsRead(notificationId);
+            setNotifications((prev) => {
+                const noti = prev?.filter(p => p.notificationId !== notificationId);
+                return noti;
+            })
+            console.log(response);
         }catch(e){
             console.log(e);
             toast.error("Error occured",e);
@@ -33,6 +38,7 @@ export default function Notification(){
     return(
     <>
     <div>
+    {notifications?.length == 0 && <>You Dont Have Any Notificattions !</>}
     {notifications && notifications.map((notification) => (
         <ul>
             <div className="flex flex-row justify-between">
