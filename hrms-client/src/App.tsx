@@ -11,11 +11,11 @@ import Signup from './pages/auth/Signup';
 import Dashboard from './pages/dashboard/Dashboard';
 import Travels from './pages/dashboard/Travels';
 import TravelDetails from './pages/dashboard/TravelDetails';
-import Notification from './components/Notification';
 import NotificationsPage from './pages/dashboard/NotificationsPage';
 import Expense from './pages/dashboard/Expense';
 import ExpenseDetails from './pages/dashboard/ExpenseDetails';
 import ExpenseReview from './components/expense/ExpenseReview';
+import Jobs from './pages/dashboard/Jobs';
 
 
 const router = createBrowserRouter([
@@ -62,7 +62,11 @@ const router = createBrowserRouter([
       {
         path: 'expenses/review/:travelId',
         element: <ExpenseReview />
-      }
+      },
+      {
+        path: 'jobs',
+        element: <Jobs />,
+      },
 
       // {
       //   path: 'achievements',
@@ -76,10 +80,7 @@ const router = createBrowserRouter([
       //   path: 'org-chart',
       //   element: <OrgChart />,
       // },
-      // {
-      //   path: 'jobs',
-      //   element: <Jobs />,
-      // },
+      
     ],
   },
 ]);

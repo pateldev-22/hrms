@@ -32,7 +32,8 @@ console.log(userData);
     { name: 'Dashboard', href: '/' },
     { name: 'Travels', href: '/travels'},
     { name: 'Expenses', href: '/expenses'},
-    { name: 'All Notifications', href: '/notifications'}
+    { name: 'Jobs', href:'/jobs'},
+    { name: 'All Notifications', href: '/notifications'},
   ];
 
   return (

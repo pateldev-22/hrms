@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, FileText, Download, Send } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, Download, Send } from 'lucide-react';
 import { expenseService } from '@/services/expenseService';
 import type { Expense, ExpenseProof } from '@/types/expenses';
 import { Button } from '@/components/ui/button';
@@ -130,8 +130,8 @@ const ExpenseDetails = () => {
       ) : (
         <div className="space-y-4">
           {expenses.map((expense) => (
-            <Card key={expense.expenseId} className="border border-gray-200">
-              <CardHeader className="border-b border-gray-100 pb-4">
+            <Card key={expense.expenseId} className="border border-gray-300">
+              <CardHeader className="border-b border-gray-300 pb-4">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3">
@@ -178,6 +178,7 @@ const ExpenseDetails = () => {
                       {expandedExpense === expense.expenseId ? 'Hide Details' : 'Show Details'}
                     </button>
                   </div>
+                  
                 </div>
               </CardHeader>
 
