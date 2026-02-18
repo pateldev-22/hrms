@@ -51,6 +51,9 @@ public class JobPosting {
     @Column(name = "status")
     private JobStatus status;
 
+    @Column(name = "jd_file_path")
+    private String jdFilePath;
+
     @Column(name = "closing_date")
     private LocalDate closingDate;
 

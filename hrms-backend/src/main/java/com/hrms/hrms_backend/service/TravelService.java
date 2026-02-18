@@ -1,20 +1,25 @@
 package com.hrms.hrms_backend.service;
 
 import com.hrms.hrms_backend.constants.AssignmentStatus;
+import com.hrms.hrms_backend.constants.EmailType;
 import com.hrms.hrms_backend.dto.travel.TravelPlanRequest;
 import com.hrms.hrms_backend.dto.travel.TravelPlanResponse;
 
 import com.hrms.hrms_backend.entity.*;
+import com.hrms.hrms_backend.event.EmailEvent;
 import com.hrms.hrms_backend.exception.CustomException;
 import com.hrms.hrms_backend.mapper.TravelMapper;
 import com.hrms.hrms_backend.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -27,14 +32,16 @@ public class TravelService {
     private final TravelMapper travelMapper;
     private final TravelAssignmentRepository travelAssignmentRepository;
     private final NotificationService notificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public TravelService(TravelPlanRepository travelPlanRepository, TravelAssignmentRepository travelAssignmentRepository, UserRepository userRepository, TravelMapper travelMapper, TravelAssignmentRepository travelAssignmentRepository1, DocumentService documentService, TravelDocumentRepository travelDocumentRepository, NotificationService notificationService) {
+    public TravelService(TravelPlanRepository travelPlanRepository, TravelAssignmentRepository travelAssignmentRepository, UserRepository userRepository, TravelMapper travelMapper, TravelAssignmentRepository travelAssignmentRepository1, DocumentService documentService, TravelDocumentRepository travelDocumentRepository, NotificationService notificationService, ApplicationEventPublisher applicationEventPublisher) {
         this.travelPlanRepository = travelPlanRepository;
         this.userRepository = userRepository;
         this.travelMapper = travelMapper;
         this.travelAssignmentRepository = travelAssignmentRepository1;
         this.notificationService = notificationService;
+        this.eventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -46,6 +53,7 @@ public class TravelService {
         if (request.getEndDate().isBefore(request.getStartDate())) {
             throw new CustomException("End date cannot be before start date");
         }
+        List<String> recipentsEmails = new ArrayList<>();
 
         TravelPlan travelPlan = new TravelPlan();
         travelPlan.setTravelName(request.getTravelName());
@@ -61,6 +69,8 @@ public class TravelService {
             User employee = userRepository.findById(userId)
                     .orElseThrow(() -> new CustomException("User not found: " + userId));
 
+            recipentsEmails.add(employee.getEmail());
+
             TravelAssignment assignment = new TravelAssignment();
             assignment.setTravelPlan(savedTravel);
             assignment.setUser(employee);
@@ -68,8 +78,20 @@ public class TravelService {
             savedTravel.addAssignment(assignment);
 
             notificationService.createTravelAssignmentNotification(savedTravel, employee);
+            eventPublisher.publishEvent(new EmailEvent(
+                    this,
+                    recipentsEmails,
+                    EmailType.TRAVEL_ASSIGNMENT,
+                    Map.of(
+                            "employeeName",employee.getFirstName() + employee.getLastName(),
+                            "travelName",savedTravel.getTravelName(),
+                            "startDate",savedTravel.getStartDate(),
+                            "endDate",savedTravel.getEndDate(),
+                            "purpose",savedTravel.getPurpose()
+                    ),
+                null
+             ));
         }
-
         travelPlanRepository.save(savedTravel);
 
         return travelMapper.toDto(savedTravel);

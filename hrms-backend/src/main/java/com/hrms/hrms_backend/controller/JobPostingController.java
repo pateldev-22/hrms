@@ -6,6 +6,7 @@ import com.hrms.hrms_backend.service.JobPostingService;
 import com.hrms.hrms_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,9 +30,11 @@ public class JobPostingController {
     }
 
     @PostMapping
-    public JobPostingResponse createJobPosting(@RequestBody JobPostingRequest dto){
+    @PreAuthorize("hasRole('HR')")
+    public JobPostingResponse createJobPosting(@RequestPart("dto") JobPostingRequest dto,
+                                               @RequestPart("jdFile") MultipartFile jdFile){
         User user = getCurrentUser();
-        return jobPostingService.createJobPosting(user,dto);
+        return jobPostingService.createJobPosting(user,dto,jdFile);
     }
 
     @PostMapping("/{jobId}/share")

@@ -1,5 +1,7 @@
 package com.hrms.hrms_backend.service;
+import com.hrms.hrms_backend.constants.EmailType;
 import com.hrms.hrms_backend.constants.ExpenseStatus;
+import com.hrms.hrms_backend.constants.Role;
 import com.hrms.hrms_backend.dto.expense.ExpenseCreateRequest;
 import com.hrms.hrms_backend.dto.expense.ExpenseResponse;
 import com.hrms.hrms_backend.dto.expense.ExpenseReviewRequest;
@@ -8,15 +10,19 @@ import com.hrms.hrms_backend.entity.Expense;
 import com.hrms.hrms_backend.entity.ExpenseCategory;
 import com.hrms.hrms_backend.entity.TravelPlan;
 import com.hrms.hrms_backend.entity.User;
+import com.hrms.hrms_backend.event.EmailEvent;
 import com.hrms.hrms_backend.exception.CustomException;
 import com.hrms.hrms_backend.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -27,19 +33,22 @@ public class ExpenseService {
     private final TravelPlanRepository travelPlanRepository;
     private final UserRepository userRepository;
     private final ExpenseProofDocumentRepository expenseProofDocumentRepository;
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
     public ExpenseService(
             ExpenseRepository expenseRepository,
             ExpenseCategoryRepository categoryRepository,
             TravelPlanRepository travelPlanRepository,
             UserRepository userRepository,
-            ExpenseProofDocumentRepository expenseProofDocumentRepository
-            ) {
+            ExpenseProofDocumentRepository expenseProofDocumentRepository, ApplicationEventPublisher eventPublisher
+    ) {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.travelPlanRepository = travelPlanRepository;
         this.userRepository = userRepository;
         this.expenseProofDocumentRepository = expenseProofDocumentRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -112,6 +121,28 @@ public class ExpenseService {
 
         expense.setStatus(ExpenseStatus.SUBMITTED);
         Expense submitted = expenseRepository.save(expense);
+
+        List<User> allHrs = userRepository.getUsersByRoleEquals(Role.HR);
+        List<String> hrMails = new ArrayList<>();
+
+        for(User hr : allHrs){
+            hrMails.add(hr.getEmail());
+        }
+
+        eventPublisher.publishEvent(new EmailEvent(
+                this,
+                hrMails,
+                EmailType.EXPENSE_SUBMITTED,
+                Map.of(
+                        "employeeName",expense.getUser().getFirstName(),
+                        "travelName",expense.getTravelPlan().getTravelName(),
+                        "category",expense.getExpenseCategory(),
+                        "amount",expense.getAmount(),
+                        "expenseDate",expense.getExpenseDate(),
+                        "description",expense.getDescription()
+                ),
+                null
+        ));
 
 
         return toExpenseDTO(submitted);
@@ -258,6 +289,22 @@ public class ExpenseService {
         }
 
         Expense reviewedExpense = expenseRepository.save(expense);
+        List<String> to = new ArrayList<>();
+        to.add(expense.getUser().getEmail());
+
+        eventPublisher.publishEvent(new EmailEvent(
+                this,
+                to,
+                EmailType.EXPENSE_REVIEWED,
+                Map.of(
+                        "employeeName",expense.getUser().getFirstName(),
+                        "reviewedBy",expense.getReviewedBy().getFirstName(),
+                        "status",expense.getStatus(),
+                        "category",expense.getExpenseCategory(),
+                        "hrRemark",expense.getHrRemarks()
+                ),
+                null
+        ));
 
         return toExpenseDTO(reviewedExpense);
     }

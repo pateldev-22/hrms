@@ -25,6 +25,7 @@ public class DocumentService {
     @Value("${cloudinary.folder.travel-documents}") String travel_docs_store_loc;
     @Value("${cloudinary.folder.expense-proofs}") String expense_docs_store_loc;
     @Value("${cloudinary.folder.refered-cv}") String cv_docs_store_loc;
+    @Value("${cloudinary.folder.jd-documents}") String jd_docs_store_loc;
 
     @Autowired
     public DocumentService(DocumentRepository documentRepository, Cloudinary cloudinary) {
@@ -68,7 +69,10 @@ public class DocumentService {
             return travel_docs_store_loc;
         }else if(category.equals("EXPENSE_PROOF")){
             return expense_docs_store_loc;
-        }else{
+        }else if(category.equals("JD_DOCUMENT")){
+            return jd_docs_store_loc;
+        }
+        else{
             return cv_docs_store_loc;
         }
     }

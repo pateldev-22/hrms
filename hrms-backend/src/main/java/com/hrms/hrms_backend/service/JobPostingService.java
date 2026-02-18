@@ -15,7 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.hrms.hrms_backend.constants.EmailType;
+import com.hrms.hrms_backend.event.EmailEvent;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 
 @Service
 @Transactional
@@ -26,6 +33,11 @@ public class JobPostingService {
     private final ReferralRepository referralRepository;
     private final UserRepository userRepository;
     private final DocumentService documentService;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Value("${app.email.default-hr}")
+    private String defaultHrEmail;
+
 
     @Autowired
     public JobPostingService(
@@ -33,15 +45,16 @@ public class JobPostingService {
             JobShareRepository shareRepository,
             ReferralRepository referralRepository,
             UserRepository userRepository,
-            DocumentService documentService) {
+            DocumentService documentService, ApplicationEventPublisher eventPublisher) {
         this.jobRepository = jobRepository;
         this.shareRepository = shareRepository;
         this.referralRepository = referralRepository;
         this.userRepository = userRepository;
         this.documentService = documentService;
+        this.eventPublisher = eventPublisher;
     }
 
-    public JobPostingResponse createJobPosting(User user, JobPostingRequest dto){
+    public JobPostingResponse createJobPosting(User user, JobPostingRequest dto, MultipartFile jdFile){
         JobPosting jobPosting = new JobPosting();
 
         jobPosting.setJobTitle(dto.getJobTitle());
@@ -55,6 +68,9 @@ public class JobPostingService {
         jobPosting.setStatus(JobStatus.ACTIVE);
         jobPosting.setClosingDate(dto.getClosingDate());
         jobPosting.setCreatedBy(user);
+
+        Document document = documentService.uploadDocument(jdFile,"JD_DOCUMENT",user);
+        jobPosting.setJdFilePath(document.getFilePath());
 
         JobPosting jobPosted =  jobRepository.save((jobPosting));
 
@@ -86,6 +102,22 @@ public class JobPostingService {
                 .build();
 
         shareRepository.save(share);
+
+        eventPublisher.publishEvent(new EmailEvent(
+                this,
+                List.of(request.getRecipientEmail()),
+                EmailType.JOB_SHARED,
+                Map.of(
+                        "jobTitle", job.getJobTitle(),
+                        "department", job.getDepartment(),
+                        "location", job.getLocation(),
+                        "experience", job.getExperienceRequired(),
+                        "jobSummary", job.getJobSummary(),
+                        "closingDate", job.getClosingDate().toString(),
+                        "jdFilePath", job.getJdFilePath() != null ? job.getJdFilePath() : ""
+                ),
+                null
+        ));
     }
 
     @Transactional
@@ -114,6 +146,33 @@ public class JobPostingService {
 
         Referral savedReferral = referralRepository.save(referral);
 
+        List<String> recipients = new ArrayList<>();
+        recipients.add(defaultHrEmail);
+
+        recipients.add(job.getHrOwnerEmail());
+
+        for (String email : job.getCvReviewerEmails().split(",")) {
+            recipients.add(email.trim());
+        }
+
+        List<String> uniqueRecipients = recipients.stream().distinct().toList();
+
+        eventPublisher.publishEvent(new EmailEvent(
+                this,
+                uniqueRecipients,
+                EmailType.JOB_REFERRAL_HR,
+                Map.of(
+                        "jobTitle", job.getJobTitle(),
+                        "jobSummary", job.getJobSummary(),
+                        "referrerName", user.getFirstName() + " " + user.getLastName(),
+                        "referrerEmail", user.getEmail(),
+                        "friendName", request.getFriendName(),
+                        "friendEmail", request.getFriendEmail() != null ? request.getFriendEmail() : "Not provided",
+                        "note", request.getReferralNote() != null ? request.getReferralNote() : ""
+                ),
+                cvDocument.getFilePath()
+        ));
+
 
         return toReferralResponse(savedReferral);
     }
@@ -128,11 +187,14 @@ public class JobPostingService {
         dto.setLocation(job.getLocation());
         dto.setExperienceRequired(job.getExperienceRequired());
         dto.setJobSummary(job.getJobSummary());
+        dto.setStatus(job.getStatus().toString());
         dto.setJobDescription(job.getJobDescription());
         dto.setClosingDate(job.getClosingDate());
         dto.setTotalReferrals(referralRepository.countByJobPosting(job).intValue());
         dto.setTotalShares(shareRepository.countByJobPosting(job).intValue());
         dto.setCreatedAt(job.getCreatedAt());
+        dto.setJdFilePath(job.getJdFilePath());
+        dto.setHasJD(job.getJdFilePath() != null);
         return dto;
     }
 

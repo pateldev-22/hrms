@@ -18,5 +18,7 @@ public class JobPostingResponse {
     private Integer totalReferrals;
     private Integer totalShares;
     private LocalDateTime createdAt;
+    private String jdFilePath;
+    private boolean hasJD;
 }
 
