@@ -18,11 +18,11 @@ public class EmailTemplateService {
     }
 
     private String buildReferralEmail(Map<String, Object> data) {
-        return String.format("JobTitle :%s%n," +
-                        "Job Summary :%s%n," +
-                        "refferedTo :%s%n," +
-                        "referred by :%s%n," +
-                        "Friend Name :%s%n," +
+        return String.format("JobTitle :%s%n" +
+                        "Job Summary :%s%n" +
+                        "refferedTo :%s%n" +
+                        "referred by :%s%n" +
+                        "Friend Name :%s%n" +
                         "Friend Eamil :%s%n",
                 data.get("jobTitle"), data.get("jobSummary"),
                 data.get("referrerName"), data.get("referrerEmail"),
@@ -31,13 +31,13 @@ public class EmailTemplateService {
     }
 
     private String buildSharedJobEmail(Map<String, Object> data) {
-        return String.format("Job Title :%s%n," +
-                        "Department :%s%n," +
-                        "Location :%s%n," +
-                        "Experience :%s%n," +
-                        "Job Summary :%s%n," +
-                        "Closing Date :%s%n," +
-                        "Jd File Path :%s%n",
+        return String.format("Job Title :%s%n" +
+                        "Department :%s%n" +
+                        "Location :%s%n" +
+                        "Experience :%s%n" +
+                        "Job Summary :%s%n" +
+                        "Closing Date :%s%n" +
+                        "%s%n",
                 data.get("jobTitle"), data.get("department"),
                 data.get("location"), data.get("experience"),
                 data.get("jobSummary"),
@@ -49,11 +49,11 @@ public class EmailTemplateService {
     }
 
     private String buildTravelAssignmentEmail(Map<String, Object> data) {
-        return String.format("Employee Name :%s%n," +
-                        "Travel Name :%s%n," +
-                        "Destination :%s%n," +
-                        "StartDate :%s%n," +
-                        "End Date :%s%n," +
+        return String.format("Employee Name :%s%n" +
+                        "Travel Name :%s%n" +
+                        "Destination :%s%n" +
+                        "StartDate :%s%n" +
+                        "End Date :%s%n" +
                         "Purpose :%s%n",
                 data.get("employeeName"),
                 data.get("travelName"), data.get("destination"),
@@ -63,11 +63,11 @@ public class EmailTemplateService {
     }
 
     private String buildExpenseSubmittedEmail(Map<String, Object> data) {
-        return String.format("Employee Name :%s%n," +
-                        "Travel Name :%s%n," +
-                        "Category :%s%n," +
-                        "Amount :%s%n," +
-                        "Expense Date :%s%n," +
+        return String.format("Employee Name :%s%n" +
+                        "Travel Name :%s%n" +
+                        "Category :%s%n" +
+                        "Amount :%s%n" +
+                        "Expense Date :%s%n" +
                         "Description :%s%n",
                 data.get("employeeName"), data.get("travelName"),
                 data.get("category"), data.get("amount"),
@@ -76,10 +76,10 @@ public class EmailTemplateService {
     }
 
     private String buildExpenseReviewedEmail(Map<String, Object> data) {
-        return String.format("EmployeeName :%s%n," +
-                        "ReviewedBy :%s%n," +
-                        "Status of Expense :%s%n," +
-                        "Category :%s%n," +
+        return String.format("EmployeeName :%s%n" +
+                        "ReviewedBy :%s%n" +
+                        "Status of Expense :%s%n" +
+                        "Category :%s%n" +
                         "HR Remark :%s%n",
                 data.get("employeeName"),data.get("reviewedBy"),
                 data.get("status"),
