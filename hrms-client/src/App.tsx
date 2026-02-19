@@ -16,6 +16,7 @@ import Expense from './pages/dashboard/Expense';
 import ExpenseDetails from './pages/dashboard/ExpenseDetails';
 import ExpenseReview from './components/expense/ExpenseReview';
 import Jobs from './pages/dashboard/Jobs';
+import OrgChart from './pages/dashboard/OrgChart';
 
 
 const router = createBrowserRouter([
@@ -67,7 +68,10 @@ const router = createBrowserRouter([
         path: 'jobs',
         element: <Jobs />,
       },
-
+      {
+        path: 'org-chart',
+        element: <OrgChart />
+      }
       // {
       //   path: 'achievements',
       //   element: <Achievements />,

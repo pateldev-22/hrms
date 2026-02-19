@@ -33,6 +33,7 @@ console.log(userData);
     { name: 'Travels', href: '/travels'},
     { name: 'Expenses', href: '/expenses'},
     { name: 'Jobs', href:'/jobs'},
+    { name: 'Org Chart', href:'/org-chart'},
     { name: 'All Notifications', href: '/notifications'},
   ];
 
