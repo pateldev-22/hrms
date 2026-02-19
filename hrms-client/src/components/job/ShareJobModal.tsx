@@ -93,9 +93,9 @@ const ShareJobModal = ({ job, isOpen, onClose }: ShareJobModalProps) => {
                         )}
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                        <p className="text-sm text-blue-800">
-                            📧 An email will be sent with job details and JD attachment
+                    <div className="border p-3">
+                        <p className="text-sm">
+                            An email will be sent with job details and JD attachment
                         </p>
                     </div>
                 </div>

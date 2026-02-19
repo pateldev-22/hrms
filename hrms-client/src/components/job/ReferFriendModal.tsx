@@ -112,7 +112,7 @@ const ReferFriendModal = ({ job, isOpen, onClose }: ReferFriendModalProps) => {
 
                 <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
 
-                    <div className="bg-green-50 border border-green-200 p-3">
+                    <div className="border p-3">
                         <div className="flex justify-between text-sm text-gray-600">
                             <span>Location: {job.location}</span>
                             <span>Exp: {job.experienceRequired}</span>
@@ -232,9 +232,9 @@ const ReferFriendModal = ({ job, isOpen, onClose }: ReferFriendModalProps) => {
                         />
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 p-3">
-                        <p className="text-xs text-blue-800">
-                            📧 HR and CV reviewers will receive an email with the
+                    <div className="border p-3">
+                        <p className="text-xs">
+                            HR and CV reviewers will receive an email with the
                             referral details and attached CV
                         </p>
                     </div>
