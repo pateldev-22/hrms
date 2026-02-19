@@ -1,4 +1,5 @@
 package com.hrms.hrms_backend.service;
+import com.hrms.hrms_backend.constants.Role;
 import com.hrms.hrms_backend.dto.user.UpdateUser;
 import com.hrms.hrms_backend.entity.User;
 import com.hrms.hrms_backend.exception.CustomException;
@@ -44,6 +45,10 @@ public class UserService {
         User updated = userRepository.save(user);
 
         return userMapper.toDTO(updated);
+    }
+
+    public List<User> getAllEmployees(){
+        return userRepository.findUserByRoleIsLike(Role.EMPLOYEE);
     }
 
 }
