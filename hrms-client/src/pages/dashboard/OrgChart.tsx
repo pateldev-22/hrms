@@ -63,7 +63,8 @@ const OrgChart = () => {
 
       const hierarchyRes =  await orgChartService.getOrgChart(userId);
       const childrenRes = await orgChartService.getChildren(userId);
-      
+      console.log(hierarchyRes.data);
+      console.log(childrenRes.data);
       setHierarchy(hierarchyRes.data);
       setChildren(childrenRes.data);
     } catch (error) {

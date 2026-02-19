@@ -11,12 +11,12 @@ interface Props {
 const OrgChartTree = ({ hierarchy, children, selectedUserId, onEmployeeClick }: Props) => {
 
   return (
-    <div className="bg-white border border-gray-200 p-8 overflow-x-auto">
-      <div className="inline-flex flex-col items-center min-w-max">
+    <div className="bg-white border border-gray-200 p-8 overflow-x-auto max-w-full">
+      <div className="inline-flex flex-col items-center min-w-max pl-20">
         {hierarchy.map((emp, index) => {
           const isSelected = emp.userId === selectedUserId;
-          console.log("index :",index);
-          console.log("length :",hierarchy.length);
+        //   console.log("index :",index);
+        //   console.log("length :",hierarchy.length);
           const hasNext = index < hierarchy.length - 1;
 
           return (
