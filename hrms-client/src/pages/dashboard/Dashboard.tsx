@@ -17,9 +17,7 @@ const Dashboard = () => {
             </CardDescription>
         </CardHeader>
         <CardContent>
-            <p className="text-gray-600">
-            This dashboard provides an overview of your activities. Navigate through the sidebar to access different modules.
-            </p>
+            
         </CardContent>
       </Card>
     </div>
@@ -27,3 +25,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

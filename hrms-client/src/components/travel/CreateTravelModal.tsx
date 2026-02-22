@@ -91,7 +91,7 @@ const CreateTravelModal = ({ onClose, onSuccess }: CreateTravelModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-opacity-30 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-green-50 w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border-2 border-black">
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-black">
         <div className="flex justify-between items-center p-6 border border-black">
           <h2 className="text-xl font-bold text-gray-900">Create Travel Plan</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
