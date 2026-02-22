@@ -42,5 +42,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "from users u where u.manager_id = :employeeId", nativeQuery = true)
     List<OrgChartChildResponse> findImmediateChilds(@Param("employeeId") Long employeeId);
 
-    List<User> findUserByRoleIsLike(Role role);
 }
