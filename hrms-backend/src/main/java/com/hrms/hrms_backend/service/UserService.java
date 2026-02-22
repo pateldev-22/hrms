@@ -47,8 +47,6 @@ public class UserService {
         return userMapper.toDTO(updated);
     }
 
-    public List<User> getAllEmployees(){
-        return userRepository.findUserByRoleIsLike(Role.EMPLOYEE);
-    }
+
 
 }
