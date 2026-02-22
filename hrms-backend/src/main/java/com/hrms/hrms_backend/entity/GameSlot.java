@@ -50,5 +50,11 @@ public class GameSlot {
     private List<GameBooking> bookings = new ArrayList<>();
 
 
+    public int getCurrentPlayerCount() {
+        return (int) bookings.stream()
+                .filter(b -> !"CANCELLED".equals(b.getBookingStatus()))
+                .count();
+    }
+
 }
 
